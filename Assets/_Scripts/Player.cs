@@ -1,121 +1,116 @@
+#region
+
 using System;
 using System.Collections;
+using _Scripts.Helpers;
+using _Scripts.Systems;
 using Unity.Mathematics;
 using UnityEngine;
 
+#endregion
+
 namespace _Scripts
 {
-    public class Player : MonoBehaviour
+    public class Player : StaticInstance<Player>
     {
         [SerializeField] private float speed;
-        private Transform _transform;
-
-        private void Awake()
-        {
-            _transform = transform;
-        }
-
         [SerializeField] private float jumpDuration = 5f;
         [SerializeField] private float jumpHeight = 5f;
-        private float _jumpStart;
+
+        [SerializeField] private float jumpRadius = 5f;
+
         private bool _isJumping;
-        private Vector3 _jumpStartLocation;
         private Vector3 _jumpEndLocation;
+        private Vector3 _jumpStartLocation;
+
+        private float _previousJumpRadius;
+        private Transform _transform;
+
+        public float JumpRadius => jumpRadius;
+        public float JumpDuration => jumpDuration;
+
+        protected override void Awake()
+        {
+            base.Awake();
+
+            _transform = transform;
+            _previousJumpRadius = jumpRadius;
+        }
+
+        private void Start()
+        {
+            GameInput.Instance.OnJump += GameInputOnJump;
+        }
 
         private void Update()
         {
-            Vector3 movementVector = ReadMovement();
-            bool jumping = ReadJump();
+            CalculateMovement();
 
-            if (jumping)
+            if (Math.Abs(_previousJumpRadius - jumpRadius) > 0.00001f)
             {
-                float jumpRadius = 5f;
-                _jumpStart = Time.time;
+                OnLineWidthChanged?.Invoke();
+                _previousJumpRadius = jumpRadius;
+            }
+        }
+
+        public event Action OnLineWidthChanged;
+        public event Action OnJumpStarted;
+        public event Action OnJumpFinished;
+
+        private void GameInputOnJump()
+        {
+            if (!_isJumping)
+            {
+                Vector2 movementVector = GameInput.Instance.GetMovementVectorNormalized();
+                Vector3 movementVector3 = new Vector3(movementVector.x, 0, movementVector.y);
+
                 _isJumping = true;
                 _jumpStartLocation = _transform.position;
-                _jumpEndLocation = _transform.position + movementVector * jumpRadius;
+                _jumpEndLocation = _transform.position + movementVector3 * jumpRadius;
 
                 StartCoroutine(PlayerJump());
-                StartCoroutine(PlayerRotate());
-            }
 
-            if (_isJumping && _jumpStart + jumpDuration < Time.time)
-            {
-                _isJumping = false;
-                _transform.position = _jumpEndLocation;
+                OnJumpStarted?.Invoke();
             }
+        }
+
+        private void CalculateMovement()
+        {
+            Vector2 movementVector = GameInput.Instance.GetMovementVectorNormalized();
+            Vector3 movementVector3 = new Vector3(movementVector.x, 0, movementVector.y);
 
             if (!_isJumping)
             {
-                Move(movementVector);
+                Move(movementVector3);
             }
         }
 
         private IEnumerator PlayerJump()
         {
-            float t = (Time.time - _jumpStart) / jumpDuration;
+            float t = 0;
 
             while (t < jumpDuration)
             {
                 t += Time.deltaTime;
 
-                _transform.position = Parabola(_jumpStartLocation, _jumpEndLocation, jumpHeight, t / jumpDuration);
+                float tNorm = t/jumpDuration;
+                float curX = Mathf.Lerp(_jumpStartLocation.x, _jumpEndLocation.x, tNorm);
+                float curZ = Mathf.Lerp(_jumpStartLocation.z, _jumpEndLocation.z,tNorm);
+                float curY = MathHelper.GetParabolaHeight(jumpDuration, jumpHeight, tNorm);
+                _transform.position = new Vector3(curX, curY, curZ);
+                
                 yield return null;
             }
 
             _transform.position = _jumpEndLocation;
-        }
+            _isJumping = false;
 
-        private IEnumerator PlayerRotate()
-        {
-            float t = (Time.time - _jumpStart) / jumpDuration;
-
-            while (t < jumpDuration)
-            {
-                t += Time.deltaTime;
-                var tNorm = Mathf.Clamp01(t / jumpDuration);
-
-                var rotation = Quaternion.Lerp(Quaternion.Euler(0, 0, 0), quaternion.Euler(0, 360, 0), tNorm);
-                // var rotation = Quaternion.Lerp(new Quaternion(0,0,0,1), new Quaternion(0,0,0,-1), tNorm);
-
-                _transform.rotation = rotation;
-                yield return null;
-            }
-
-
-            _transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-
-        private Vector3 ReadMovement()
-        {
-            float x = Input.GetAxisRaw("Horizontal");
-            float y = Input.GetAxisRaw("Vertical");
-            Vector2 movementVector = new Vector2(x, y).normalized;
-            Vector3 movementVector3 = new Vector3(movementVector.x, 0, movementVector.y);
-
-            return movementVector3;
-        }
-
-        private bool ReadJump()
-        {
-            return !_isJumping && Input.GetKeyDown(KeyCode.Space);
+            OnJumpFinished?.Invoke();
         }
 
         private void Move(Vector3 movementVector)
         {
             _transform.position += Time.deltaTime * speed * movementVector;
-        }
-
-        private Vector3 Parabola(Vector3 start, Vector3 end, float height, float t)
-        {
-            float a = -4;
-            float b = 4;
-
-            float curY = (a * t * t + b * t) * height + start.y;
-            float curX = Mathf.Lerp(start.x, end.x, t);
-            float curZ = Mathf.Lerp(start.z, end.z, t);
-
-            return new Vector3(curX, curY, curZ);
         }
     }
 }
