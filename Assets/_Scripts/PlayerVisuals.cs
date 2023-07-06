@@ -26,16 +26,18 @@ namespace _Scripts
             float t = 0;
             float jumpDuration = Player.Instance.JumpDuration;
             Quaternion startRotation = _transform.rotation;
-            
-            Quaternion startRotationLocal = quaternion.Euler(0, 0, 0);
-            Quaternion finalRotationLocal = quaternion.Euler(new Vector3(-1f,-1f,0) * (180 * Mathf.Deg2Rad));
 
+            Quaternion a = new Quaternion(1, 1, 0, 0);
+            a.Normalize();
+            Quaternion startRotationLocal = quaternion.Euler(0, 0, 0);
+            // Quaternion finalRotationLocal = quaternion.Euler(new Vector3(-1f,-1f,0) * (180 * Mathf.Deg2Rad));
+            Quaternion finalRotationLocal = a;
             while (t < jumpDuration)
             {
                 t += Time.deltaTime;
                 var tNorm = Mathf.Clamp01(t / jumpDuration);
 
-                var rotation = Quaternion.Lerp(startRotationLocal, finalRotationLocal, tNorm);
+                var rotation = Quaternion.Slerp(startRotationLocal, finalRotationLocal, tNorm);
 
                 _transform.rotation = rotation;
                 yield return null;
