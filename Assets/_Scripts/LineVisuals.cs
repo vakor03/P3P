@@ -23,7 +23,7 @@ namespace _Scripts
             InitLine();
             RenderLine(Player.Instance.JumpRadius);
 
-            Player.Instance.OnLineWidthChanged += PlayerOnLineWidthChanged;
+            Player.Instance.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
             Player.Instance.OnJumpStarted += PlayerOnJumpStarted;
             Player.Instance.OnJumpFinished += PlayerOnJumpFinished;
         }
@@ -38,7 +38,7 @@ namespace _Scripts
             Hide();
         }
 
-        private void PlayerOnLineWidthChanged()
+        private void PlayerOnJumpRadiusChanged()
         {
             RenderLine(Player.Instance.JumpRadius);
         }

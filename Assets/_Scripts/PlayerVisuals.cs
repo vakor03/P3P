@@ -1,16 +1,22 @@
-﻿using System.Collections;
+﻿#region
+
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts
 {
     public class PlayerVisuals : MonoBehaviour
     {
         private Transform _transform;
+
         private void Awake()
         {
             _transform = transform;
         }
+
         private void Start()
         {
             Player.Instance.OnJumpStarted += PlayerOnJumpStarted;

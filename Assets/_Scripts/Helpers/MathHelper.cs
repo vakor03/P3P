@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace _Scripts.Helpers
+﻿namespace _Scripts.Helpers
 {
     public static class MathHelper
     {

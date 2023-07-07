@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using _Scripts.Helpers;
 using _Scripts.Systems;
-using Unity.Mathematics;
 using UnityEngine;
 
 #endregion
@@ -48,31 +47,28 @@ namespace _Scripts
 
             if (Math.Abs(_previousJumpRadius - jumpRadius) > 0.00001f)
             {
-                OnLineWidthChanged?.Invoke();
+                OnJumpRadiusChanged?.Invoke();
                 _previousJumpRadius = jumpRadius;
             }
         }
 
-        public event Action OnLineWidthChanged;
-        public event Action OnJumpStarted;
-        public event Action OnJumpFinished;
-
-        private void GameInputOnJump()
+        private void GameInputOnJump(GameInput.JumpEventArgs obj)
         {
             if (!_isJumping)
             {
-                Vector2 movementVector = GameInput.Instance.GetMovementVectorNormalized();
-                Vector3 movementVector3 = new Vector3(movementVector.x, 0, movementVector.y);
-
                 _isJumping = true;
                 _jumpStartLocation = _transform.position;
-                _jumpEndLocation = _transform.position + movementVector3 * jumpRadius;
+                _jumpEndLocation = _transform.position + obj.JumpDirection * jumpRadius;
 
                 StartCoroutine(PlayerJump());
 
                 OnJumpStarted?.Invoke();
             }
         }
+
+        public event Action OnJumpRadiusChanged;
+        public event Action OnJumpStarted;
+        public event Action OnJumpFinished;
 
         private void CalculateMovement()
         {
@@ -93,12 +89,12 @@ namespace _Scripts
             {
                 t += Time.deltaTime;
 
-                float tNorm = t/jumpDuration;
+                float tNorm = t / jumpDuration;
                 float curX = Mathf.Lerp(_jumpStartLocation.x, _jumpEndLocation.x, tNorm);
-                float curZ = Mathf.Lerp(_jumpStartLocation.z, _jumpEndLocation.z,tNorm);
+                float curZ = Mathf.Lerp(_jumpStartLocation.z, _jumpEndLocation.z, tNorm);
                 float curY = MathHelper.GetParabolaHeight(jumpDuration, jumpHeight, tNorm);
                 _transform.position = new Vector3(curX, curY, curZ);
-                
+
                 yield return null;
             }
 
