@@ -10,6 +10,7 @@ namespace _Scripts
 {
     public class PlayerVisuals : MonoBehaviour
     {
+        [SerializeField] private PlayerMover playerMover;
         private Transform _transform;
 
         private void Awake()
@@ -19,7 +20,7 @@ namespace _Scripts
 
         private void Start()
         {
-            Player.Instance.OnJumpStarted += PlayerOnJumpStarted;
+            playerMover.OnJumpStarted += PlayerOnJumpStarted;
         }
 
         private void PlayerOnJumpStarted()
