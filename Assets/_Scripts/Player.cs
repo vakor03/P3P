@@ -102,6 +102,8 @@ namespace _Scripts
             _isJumping = false;
 
             OnJumpFinished?.Invoke();
+            
+            EnemiesManager.Instance.SpawnEnemy();
         }
 
         private void Move(Vector3 movementVector)
