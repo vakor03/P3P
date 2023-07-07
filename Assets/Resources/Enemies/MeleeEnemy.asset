@@ -15,5 +15,5 @@ MonoBehaviour:
   enemyType: 0
   prefab: {fileID: 1799912257717786867, guid: 06c9696b6adf7e24f883314ee20f9a01, type: 3}
   baseStats:
-    speed: 10
+    speed: 5
     health: 10
