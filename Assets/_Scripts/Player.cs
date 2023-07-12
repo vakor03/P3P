@@ -1,116 +1,89 @@
 #region
 
 using System;
-using System.Collections;
 using _Scripts.Helpers;
-using _Scripts.Systems;
-using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 #endregion
 
 namespace _Scripts
 {
-    public class Player : StaticInstance<Player>
+    [RequireComponent(typeof(PlayerMover))]
+    public class Player : StaticInstance<Player>, IDamageable
     {
-        [SerializeField] private float speed;
-        [SerializeField] private float jumpDuration = 5f;
-        [SerializeField] private float jumpHeight = 5f;
+        [SerializeField] private float jumpRadiusModifier = 1f;
+        [SerializeField] private float radiusOffset = 0.5f;
 
-        [SerializeField] private float jumpRadius = 5f;
+        private readonly int _stepsCount = 6;
 
-        private bool _isJumping;
-        private Vector3 _jumpEndLocation;
-        private Vector3 _jumpStartLocation;
+        private int _jumpNumber;
+        private int _health = 3;
 
-        private float _previousJumpRadius;
+        private bool _invincible;
+
+        private float _jumpRadius;
+
+        private PlayerAttacker _playerAttacker;
+        private PlayerMover _playerMover;
         private Transform _transform;
-
-        public float JumpRadius => jumpRadius;
-        public float JumpDuration => jumpDuration;
+        public float JumpRadius => _jumpRadius;
+        public int JumpNumber => _jumpNumber;
+        public float JumpDuration => _playerMover.JumpDuration;
 
         protected override void Awake()
         {
             base.Awake();
 
-            _transform = transform;
-            _previousJumpRadius = jumpRadius;
+            _playerMover = GetComponent<PlayerMover>();
+            _playerAttacker = GetComponent<PlayerAttacker>();
+            
+            ChangeJumpRadius();
         }
 
         private void Start()
         {
-            GameInput.Instance.OnJump += GameInputOnJump;
+            _playerMover.OnJumpStarted += PlayerMoverOnJumpStarted;
+            _playerMover.OnJumpFinished += PlayerMoverOnJumpFinished;
         }
 
-        private void Update()
-        {
-            CalculateMovement();
+        public event Action OnJumpRadiusChanged;
+        public event Action OnDamageTaken;
 
-            if (Math.Abs(_previousJumpRadius - jumpRadius) > 0.00001f)
-            {
-                OnLineWidthChanged?.Invoke();
-                _previousJumpRadius = jumpRadius;
-            }
+        private void PlayerMoverOnJumpStarted()
+        {
+            _invincible = true;
         }
 
-        public event Action OnLineWidthChanged;
-        public event Action OnJumpStarted;
-        public event Action OnJumpFinished;
-
-        private void GameInputOnJump()
+        private void PlayerMoverOnJumpFinished()
         {
-            if (!_isJumping)
-            {
-                Vector2 movementVector = GameInput.Instance.GetMovementVectorNormalized();
-                Vector3 movementVector3 = new Vector3(movementVector.x, 0, movementVector.y);
+            _invincible = false;
 
-                _isJumping = true;
-                _jumpStartLocation = _transform.position;
-                _jumpEndLocation = _transform.position + movementVector3 * jumpRadius;
-
-                StartCoroutine(PlayerJump());
-
-                OnJumpStarted?.Invoke();
-            }
+            _playerAttacker.PerformAttack();
+            ChangeJumpRadius();
+            OnJumpRadiusChanged?.Invoke();
         }
 
-        private void CalculateMovement()
+        private void ChangeJumpRadius()
         {
-            Vector2 movementVector = GameInput.Instance.GetMovementVectorNormalized();
-            Vector3 movementVector3 = new Vector3(movementVector.x, 0, movementVector.y);
-
-            if (!_isJumping)
+            int oldStepsCount = _jumpNumber;
+            while (oldStepsCount == _jumpNumber)
             {
-                Move(movementVector3);
-            }
-        }
-
-        private IEnumerator PlayerJump()
-        {
-            float t = 0;
-
-            while (t < jumpDuration)
-            {
-                t += Time.deltaTime;
-
-                float tNorm = t/jumpDuration;
-                float curX = Mathf.Lerp(_jumpStartLocation.x, _jumpEndLocation.x, tNorm);
-                float curZ = Mathf.Lerp(_jumpStartLocation.z, _jumpEndLocation.z,tNorm);
-                float curY = MathHelper.GetParabolaHeight(jumpDuration, jumpHeight, tNorm);
-                _transform.position = new Vector3(curX, curY, curZ);
-                
-                yield return null;
+                _jumpNumber = Random.Range(1, 1 + _stepsCount);
             }
 
-            _transform.position = _jumpEndLocation;
-            _isJumping = false;
-
-            OnJumpFinished?.Invoke();
+            _jumpRadius = _jumpNumber * jumpRadiusModifier + radiusOffset;
         }
 
-        private void Move(Vector3 movementVector)
+        public void TakeDamage()
         {
-            _transform.position += Time.deltaTime * speed * movementVector;
+            if (_invincible)
+            {
+                return;
+            }
+
+            _health--;
+            OnDamageTaken?.Invoke();
         }
     }
 }

@@ -1,19 +1,26 @@
-﻿using System.Collections;
+﻿#region
+
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts
 {
     public class PlayerVisuals : MonoBehaviour
     {
+        [SerializeField] private PlayerMover playerMover;
         private Transform _transform;
+
         private void Awake()
         {
             _transform = transform;
         }
+
         private void Start()
         {
-            Player.Instance.OnJumpStarted += PlayerOnJumpStarted;
+            playerMover.OnJumpStarted += PlayerOnJumpStarted;
         }
 
         private void PlayerOnJumpStarted()
