@@ -3,9 +3,9 @@
 using System;
 using System.Collections;
 using _Scripts.Helpers;
-using _Scripts.Managers;
 using _Scripts.Systems;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #endregion
 
@@ -16,7 +16,6 @@ namespace _Scripts
         [SerializeField] private float speed;
         [SerializeField] private float jumpDuration = 0.1f;
         [SerializeField] private float jumpHeight = 5f;
-        [SerializeField] private float jumpRadius = 5f;
 
         private bool _isJumping;
         private Vector3 _jumpEndLocation;
@@ -25,7 +24,7 @@ namespace _Scripts
 
         public float JumpDuration => jumpDuration;
 
-        public float JumpRadius => jumpRadius;
+        private float _jumpRadius;
 
         public bool IsJumping => _isJumping;
 
@@ -37,6 +36,13 @@ namespace _Scripts
         private void Start()
         {
             GameInput.Instance.OnJump += GameInputOnJump;
+            _jumpRadius = Player.Instance.JumpRadius;
+            Player.Instance.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
+        }
+
+        private void PlayerOnJumpRadiusChanged()
+        {
+            _jumpRadius = Player.Instance.JumpRadius;
         }
 
         private void Update()
@@ -53,7 +59,7 @@ namespace _Scripts
             {
                 _isJumping = true;
                 _jumpStartLocation = _transform.position;
-                _jumpEndLocation = _transform.position + obj.JumpDirection * jumpRadius;
+                _jumpEndLocation = _transform.position + obj.JumpDirection * _jumpRadius;
 
                 StartCoroutine(PlayerJumpCoroutine());
 

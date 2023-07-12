@@ -25,7 +25,7 @@ namespace _Scripts
             InitLine();
             RenderLine(Player.Instance.JumpRadius);
 
-            // playerMover.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
+            Player.Instance.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
             playerMover.OnJumpStarted += PlayerOnJumpStarted;
             playerMover.OnJumpFinished += PlayerOnJumpFinished;
         }

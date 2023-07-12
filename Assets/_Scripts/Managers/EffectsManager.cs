@@ -3,7 +3,6 @@ using _Scripts.Helpers;
 using _Scripts.Units;
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Scripts.Managers
 {
@@ -30,6 +29,11 @@ namespace _Scripts.Managers
         private void PlayerOnDamageTaken()
         {
             impulseSource.GenerateImpulse();
+        }
+
+        private void OnDestroy()
+        {
+            MeleeEnemy.OnEnemyDead -= EnemyOnEnemyDead;
         }
     }
 }
