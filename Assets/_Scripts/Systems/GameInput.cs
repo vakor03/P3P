@@ -34,6 +34,10 @@ namespace _Scripts.Systems
 
         private void GroundOnClicked(Ground.GroundClickedEventArgs obj)
         {
+            if (Helper.IsOverUI())
+            {
+                return;
+            }
             Vector3 jumpDirection = obj.HitPoint - Player.Instance.transform.position;
             jumpDirection.y = 0;
             OnJump?.Invoke(new JumpEventArgs { JumpDirection = jumpDirection.normalized });

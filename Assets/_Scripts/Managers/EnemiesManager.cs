@@ -1,10 +1,8 @@
 ﻿#region
 
-using System;
 using _Scripts.Helpers;
 using _Scripts.Systems;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 #endregion
 
@@ -12,6 +10,8 @@ namespace _Scripts.Managers
 {
     public class EnemiesManager : Singleton<EnemiesManager>
     {
+        private const float ENEMIES_DEFAULT_Y = 0.6f;
+
         private void Update()
         {
 #if DEBUG
@@ -24,7 +24,7 @@ namespace _Scripts.Managers
 
         public void SpawnEnemy()
         {
-            var spawnPoint = GetPointInRadius(Player.Instance.transform.position, 5f, 7f);
+            var spawnPoint = GetPointInRadius(Player.Instance.transform.position, 7f, 12f);
             SpawnUnit(EnemyType.MeleeEnemy, spawnPoint);
         }
 
@@ -36,7 +36,7 @@ namespace _Scripts.Managers
             float x = (int)(point.x + distance * Mathf.Cos(angle));
             float z = (int)(point.z + distance * Mathf.Sin(angle));
             
-            return new Vector3(x, point.y, z);
+            return new Vector3(x, ENEMIES_DEFAULT_Y, z);
         }
 
         private void SpawnUnit(EnemyType enemyType, Vector3 position)
