@@ -35,11 +35,12 @@ namespace _Scripts.Systems
         private void GroundOnClicked(Ground.GroundClickedEventArgs obj)
         {
             Vector3 jumpDirection = obj.HitPoint - Player.Instance.transform.position;
+            jumpDirection.y = 0;
             OnJump?.Invoke(new JumpEventArgs { JumpDirection = jumpDirection.normalized });
         }
 
         private void JumpOnPerformed(InputAction.CallbackContext obj)
-        {
+         {
             Vector3 jumpDirection = new Vector3(_lastMovementVector.x, 0, _lastMovementVector.y);
             OnJump?.Invoke(new JumpEventArgs(){JumpDirection = jumpDirection});
         }
