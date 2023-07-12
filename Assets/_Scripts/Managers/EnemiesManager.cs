@@ -1,14 +1,27 @@
 ﻿#region
 
+using System;
 using _Scripts.Helpers;
+using _Scripts.Systems;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 #endregion
 
-namespace _Scripts.Systems
+namespace _Scripts.Managers
 {
     public class EnemiesManager : Singleton<EnemiesManager>
     {
+        private void Update()
+        {
+#if DEBUG
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                SpawnEnemy();
+            }
+#endif
+        }
+
         public void SpawnEnemy()
         {
             var spawnPoint = GetPointInRadius(Player.Instance.transform.position, 5f, 7f);
@@ -22,7 +35,7 @@ namespace _Scripts.Systems
 
             float x = (int)(point.x + distance * Mathf.Cos(angle));
             float z = (int)(point.z + distance * Mathf.Sin(angle));
-
+            
             return new Vector3(x, point.y, z);
         }
 
@@ -30,7 +43,7 @@ namespace _Scripts.Systems
         {
             var enemyScriptable = ResourceSystem.Instance.GetEnemy(enemyType);
 
-            var spawned = Instantiate(enemyScriptable.prefab, position, Quaternion.identity);
+            var spawned = Instantiate(enemyScriptable.prefab, position, Quaternion.identity, transform);
 
             var stats = enemyScriptable.baseStats;
             

@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using _Scripts.Helpers;
+using _Scripts.Managers;
 using _Scripts.Systems;
 using UnityEngine;
 
@@ -92,8 +93,6 @@ namespace _Scripts
             _isJumping = false;
 
             OnJumpFinished?.Invoke();
-
-            EnemiesManager.Instance.SpawnEnemy();
         }
 
         private void Move(Vector3 movementVector)
