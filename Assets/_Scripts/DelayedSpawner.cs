@@ -10,8 +10,8 @@ namespace _Scripts
         [SerializeField] private float delay;
         [SerializeField] private int spawnCount;
         [SerializeField] private bool isActive = true;
-        
-        
+
+
         private void Start()
         {
             StartCoroutine(SpawnCoroutine());
@@ -19,13 +19,15 @@ namespace _Scripts
 
         private IEnumerator SpawnCoroutine()
         {
-            while (isActive)
+            while (true)
             {
-                for (int i = 0; i < spawnCount; i++)
+                if (isActive)
                 {
-                    EnemiesManager.Instance.SpawnEnemy();
+                    for (int i = 0; i < spawnCount; i++)
+                    {
+                        EnemiesManager.Instance.SpawnEnemy();
+                    }
                 }
-                
                 yield return Helper.GetCachedWaitForSeconds(delay);
             }
         }
