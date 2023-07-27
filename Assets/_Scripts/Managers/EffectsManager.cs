@@ -1,6 +1,7 @@
-using System;
 using _Scripts.Helpers;
 using _Scripts.Units;
+using _Scripts.Units.Enemies;
+using _Scripts.Units.Players;
 using Cinemachine;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace _Scripts.Managers
 
         private void Start()
         {
-            player.OnDamageTaken += PlayerOnDamageTaken;
+            player.UnitHealth.OnHealthChanged += PlayerOnHealthChanged;
             MeleeEnemy.OnEnemyDead += EnemyOnEnemyDead;
         }
 
@@ -26,9 +27,12 @@ namespace _Scripts.Managers
             Destroy(effectSpawned, destroyDelay);
         }
 
-        private void PlayerOnDamageTaken()
+        private void PlayerOnHealthChanged(int oldValue, int newValue)
         {
-            impulseSource.GenerateImpulse();
+            if (oldValue > newValue)
+            {
+                impulseSource.GenerateImpulse();
+            }
         }
 
         private void OnDestroy()

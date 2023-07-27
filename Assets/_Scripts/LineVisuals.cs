@@ -1,5 +1,6 @@
 ﻿#region
 
+using _Scripts.Units.Players;
 using UnityEngine;
 
 #endregion
@@ -12,6 +13,7 @@ namespace _Scripts
         [SerializeField] [Range(0, 50)] private int segments = 50;
         [SerializeField] private PlayerMover playerMover;
 
+        private IJumpRadiusController _jumpRadiusController;
 
         private LineRenderer _lineRenderer;
 
@@ -22,10 +24,11 @@ namespace _Scripts
 
         private void Start()
         {
+            _jumpRadiusController = Player.Instance.JumpRadiusController;
             InitLine();
-            RenderLine(Player.Instance.JumpRadius);
+            RenderLine(_jumpRadiusController.JumpRadius);
 
-            Player.Instance.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
+            _jumpRadiusController.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
             playerMover.OnJumpStarted += PlayerOnJumpStarted;
             playerMover.OnJumpFinished += PlayerOnJumpFinished;
         }
@@ -42,7 +45,7 @@ namespace _Scripts
 
         private void PlayerOnJumpRadiusChanged()
         {
-            RenderLine(Player.Instance.JumpRadius);
+            RenderLine(_jumpRadiusController.JumpRadius);
         }
 
         private void InitLine()

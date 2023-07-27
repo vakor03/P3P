@@ -1,18 +1,20 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
-namespace _Scripts
+namespace _Scripts.Units.Players
 {
     public class PlayerRadiusText : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI text;
         [SerializeField] private PlayerMover playerMover;
-        
+
+        private IJumpRadiusController _jumpRadiusController;
         private void Start()
         {
-            text.text = Player.Instance.JumpNumber.ToString();
-            Player.Instance.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
+            _jumpRadiusController = Player.Instance.JumpRadiusController;
+            
+            text.text = _jumpRadiusController.JumpNumber.ToString();
+            _jumpRadiusController.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
             playerMover.OnJumpStarted += PlayerMoverOnJumpStarted;
             playerMover.OnJumpFinished += PlayerMoverOnJumpFinished;
         }
@@ -29,7 +31,7 @@ namespace _Scripts
 
         private void PlayerOnJumpRadiusChanged()
         {
-            text.text = Player.Instance.JumpNumber.ToString();
+            text.text = _jumpRadiusController.JumpNumber.ToString();
         }
     }
 }

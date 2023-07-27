@@ -2,6 +2,7 @@
 
 using _Scripts.Helpers;
 using _Scripts.Systems;
+using _Scripts.Units.Players;
 using UnityEngine;
 
 #endregion
@@ -25,7 +26,7 @@ namespace _Scripts.Managers
         public void SpawnEnemy()
         {
             var spawnPoint = GetPointInRadius(Player.Instance.transform.position, 7f, 12f);
-            SpawnUnit(EnemyType.MeleeEnemy, spawnPoint);
+            SpawnUnit(EnemyType.RangedEnemy, spawnPoint);
         }
 
         private Vector3 GetPointInRadius(Vector3 point, float minRadius, float maxRadius)

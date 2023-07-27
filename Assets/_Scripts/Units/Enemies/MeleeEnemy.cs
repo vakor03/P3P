@@ -1,11 +1,12 @@
 ﻿#region
 
 using System;
+using _Scripts.Units.Players;
 using UnityEngine;
 
 #endregion
 
-namespace _Scripts.Units
+namespace _Scripts.Units.Enemies
 {
     public class MeleeEnemy : EnemyBase, IDamageable
     {
@@ -26,9 +27,9 @@ namespace _Scripts.Units
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.transform == Player.Instance.transform)
+            if (other.TryGetComponent(out DamageReceiver damageReceiver) && damageReceiver.IsPlayer)
             {
-                Player.Instance.TakeDamage();
+                damageReceiver.ReceiveDamage(1);
                 TakeDamage();
             }
         }

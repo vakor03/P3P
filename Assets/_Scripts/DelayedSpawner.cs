@@ -1,35 +1,42 @@
-﻿using System.Collections;
-using _Scripts.Helpers;
-using _Scripts.Managers;
+﻿using _Scripts.Managers;
+using _Scripts.Timers;
 using UnityEngine;
 
 namespace _Scripts
 {
     public class DelayedSpawner : MonoBehaviour
     {
-        [SerializeField] private float delay;
-        [SerializeField] private int spawnCount;
+        [SerializeField, Min(0)] private float delay;
+        [SerializeField, Min(0)] private int spawnCount;
         [SerializeField] private bool isActive = true;
 
+        private ITimer _timer;
+
+        private void Awake()
+        {
+            _timer = new Timer(delay);
+            _timer.OnTimeElapsed += SpawnEnemies;
+        }
+
+        private void SpawnEnemies()
+        {
+            for (int i = 0; i < spawnCount; i++)
+            {
+                EnemiesManager.Instance.SpawnEnemy();
+            }
+        }
 
         private void Start()
         {
-            StartCoroutine(SpawnCoroutine());
+            if (isActive)
+            {
+               _timer.Start(); 
+            }
         }
 
-        private IEnumerator SpawnCoroutine()
+        private void OnDestroy()
         {
-            while (true)
-            {
-                if (isActive)
-                {
-                    for (int i = 0; i < spawnCount; i++)
-                    {
-                        EnemiesManager.Instance.SpawnEnemy();
-                    }
-                }
-                yield return Helper.GetCachedWaitForSeconds(delay);
-            }
+            _timer.Stop();
         }
     }
 }

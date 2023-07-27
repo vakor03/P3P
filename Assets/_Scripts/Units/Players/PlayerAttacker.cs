@@ -4,7 +4,7 @@ using UnityEngine;
 
 #endregion
 
-namespace _Scripts
+namespace _Scripts.Units.Players
 {
     public class PlayerAttacker : MonoBehaviour
     {

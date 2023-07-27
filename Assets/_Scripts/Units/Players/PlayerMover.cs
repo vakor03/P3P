@@ -5,11 +5,10 @@ using System.Collections;
 using _Scripts.Helpers;
 using _Scripts.Systems;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 #endregion
 
-namespace _Scripts
+namespace _Scripts.Units.Players
 {
     public class PlayerMover : MonoBehaviour
     {
@@ -17,14 +16,22 @@ namespace _Scripts
         [SerializeField] private float jumpDuration = 0.1f;
         [SerializeField] private float jumpHeight = 5f;
 
+        [SerializeField] private LayerMask obstaclesLayerMask;
+        [SerializeField] private BoxCollider boxCollider;
+
+        private IJumpRadiusController _jumpRadiusController;
+
+        private bool _canContinueJump;
         private bool _isJumping;
+
+        private bool _isMoving;
         private Vector3 _jumpEndLocation;
+
+        private float _jumpRadius;
         private Vector3 _jumpStartLocation;
         private Transform _transform;
 
         public float JumpDuration => jumpDuration;
-
-        private float _jumpRadius;
 
         public bool IsJumping => _isJumping;
 
@@ -35,10 +42,19 @@ namespace _Scripts
 
         private void Start()
         {
+            _jumpRadiusController = Player.Instance.JumpRadiusController;
+            
             GameInput.Instance.OnJump += GameInputOnJump;
-            _jumpRadius = Player.Instance.JumpRadius;
-            Player.Instance.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
+            _jumpRadius = _jumpRadiusController.JumpRadius;
+
+            _jumpRadiusController = Player.Instance.JumpRadiusController;
+            _jumpRadiusController.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
             // LevelBoundaries.Instance.OnCollide += LevelBoundariesOnCollide;
+        }
+
+        private void Update()
+        {
+            CalculateMovement();
         }
 
         private void LevelBoundariesOnCollide()
@@ -48,12 +64,7 @@ namespace _Scripts
 
         private void PlayerOnJumpRadiusChanged()
         {
-            _jumpRadius = Player.Instance.JumpRadius;
-        }
-
-        private void Update()
-        {
-            CalculateMovement();
+            _jumpRadius = _jumpRadiusController.JumpRadius;
         }
 
         public event Action OnJumpStarted;
@@ -123,10 +134,6 @@ namespace _Scripts
             OnJumpFinished?.Invoke();
         }
 
-        private bool _canContinueJump;
-
-        private bool _isMoving;
-
         private void Move(Vector3 movementVector)
         {
             // _transform.position += Time.deltaTime * speed * movementVector;
@@ -140,9 +147,6 @@ namespace _Scripts
                 transform.position += movementVector * (speed * Time.deltaTime);
             }
         }
-
-        [SerializeField] private LayerMask obstaclesLayerMask;
-        [SerializeField] private BoxCollider boxCollider;
 
 
         private bool TryMoveInDirection(float moveDistance, ref Vector3 moveDirection)

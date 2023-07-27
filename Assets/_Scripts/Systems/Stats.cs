@@ -10,6 +10,10 @@ namespace _Scripts.Systems
     public struct Stats
     {
         public float speed;
-        public float health;
+        public int health;
+        public int damage;
+        public float attackSpeed;
+        public float attackRange;
+        public float minDistanceToPlayer;
     }
 }
