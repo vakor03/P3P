@@ -21,12 +21,12 @@ namespace _Scripts.Managers
         private void Start()
         {
             player.UnitHealth.OnHealthChanged += PlayerOnHealthChanged;
-            MeleeEnemy.OnEnemyDead += EnemyOnEnemyDead;
+            EnemyBase.OnAnyEnemyDead += EnemyOnEnemyDead;
         }
 
         private void OnDestroy()
         {
-            MeleeEnemy.OnEnemyDead -= EnemyOnEnemyDead;
+            EnemyBase.OnAnyEnemyDead -= EnemyOnEnemyDead;
         }
 
         private void EnemyOnEnemyDead(Vector3 deadPosition)

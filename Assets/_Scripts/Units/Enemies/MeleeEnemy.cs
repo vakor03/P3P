@@ -33,9 +33,7 @@ namespace _Scripts.Units.Enemies
                 TakeDamage();
             }
         }
-
-        public static event Action<Vector3> OnEnemyDead;
-
+        
         private Vector3 GetPlayerDirection()
         {
             var playerDirection = Player.Instance.transform.position - _transform.position;
@@ -49,7 +47,7 @@ namespace _Scripts.Units.Enemies
         public void TakeDamage()
         {
             OnDamageTaken?.Invoke();
-            OnEnemyDead?.Invoke(_transform.position);
+            HandleDeath(_transform.position);
             Destroy(gameObject);
         }
     }

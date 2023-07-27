@@ -12,7 +12,6 @@ namespace _Scripts.Units.Enemies
     public class RangedEnemy : EnemyBase
     {
         private IRangedEnemyState _currentState;
-        public IUnitHealth UnitHealth { get; private set; }
         public float DistanceToPlayer => Vector3.Distance(transform.position, Player.Instance.transform.position);
         public Transform Transform => transform;
 
