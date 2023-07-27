@@ -1,7 +1,10 @@
-﻿using System.Collections;
+﻿#region
+
 using System.Collections.Generic;
 using MEC;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts.Helpers
 {

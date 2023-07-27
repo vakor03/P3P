@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections;
 using _Scripts.Helpers;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts
 {
@@ -9,10 +13,10 @@ namespace _Scripts
     {
         [SerializeField] private float invincibleAfterDamageTime;
         private bool _isInvincibleAfterDamage;
-        
-        public event Action<int> OnDamageReceived;
         public bool IsPlayer => true;
         public bool IsInvincible { get; set; }
+
+        public event Action<int> OnDamageReceived;
 
         public void ReceiveDamage(int damage)
         {

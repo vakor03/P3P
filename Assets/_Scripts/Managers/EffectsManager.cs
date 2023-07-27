@@ -1,9 +1,12 @@
+#region
+
 using _Scripts.Helpers;
-using _Scripts.Units;
 using _Scripts.Units.Enemies;
 using _Scripts.Units.Players;
 using Cinemachine;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts.Managers
 {
@@ -21,6 +24,11 @@ namespace _Scripts.Managers
             MeleeEnemy.OnEnemyDead += EnemyOnEnemyDead;
         }
 
+        private void OnDestroy()
+        {
+            MeleeEnemy.OnEnemyDead -= EnemyOnEnemyDead;
+        }
+
         private void EnemyOnEnemyDead(Vector3 deadPosition)
         {
             var effectSpawned = Instantiate(onEnemyDeadParticlesPrefab, deadPosition, Quaternion.identity, transform);
@@ -33,11 +41,6 @@ namespace _Scripts.Managers
             {
                 impulseSource.GenerateImpulse();
             }
-        }
-
-        private void OnDestroy()
-        {
-            MeleeEnemy.OnEnemyDead -= EnemyOnEnemyDead;
         }
     }
 }

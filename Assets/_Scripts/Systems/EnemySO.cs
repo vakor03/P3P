@@ -1,6 +1,5 @@
 ﻿#region
 
-using _Scripts.Units;
 using _Scripts.Units.Enemies;
 using UnityEngine;
 

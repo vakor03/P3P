@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace _Scripts.Units.Players
 {
-    public class PlayerMover : MonoBehaviour
+    public class PlayerMover : MonoBehaviour, IPlayerMover
     {
         [SerializeField] private float speed;
         [SerializeField] private float jumpDuration = 0.1f;
@@ -19,8 +19,6 @@ namespace _Scripts.Units.Players
         [SerializeField] private LayerMask obstaclesLayerMask;
         [SerializeField] private BoxCollider boxCollider;
 
-        private IJumpRadiusController _jumpRadiusController;
-
         private bool _canContinueJump;
         private bool _isJumping;
 
@@ -28,6 +26,8 @@ namespace _Scripts.Units.Players
         private Vector3 _jumpEndLocation;
 
         private float _jumpRadius;
+
+        private IJumpRadiusController _jumpRadiusController;
         private Vector3 _jumpStartLocation;
         private Transform _transform;
 

@@ -1,12 +1,19 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
+#endregion
 
 namespace _Scripts.Helpers
 {
     public static class Helper
     {
         private static Dictionary<float, WaitForSeconds> _waitForSecondsCache = new();
+
+        private static PointerEventData _eventDataCurrentPosition;
+        private static List<RaycastResult> _results;
 
         public static WaitForSeconds GetCachedWaitForSeconds(float time)
         {
@@ -18,9 +25,6 @@ namespace _Scripts.Helpers
             _waitForSecondsCache.Add(time, new WaitForSeconds(time));
             return _waitForSecondsCache[time];
         }
-
-        private static PointerEventData _eventDataCurrentPosition;
-        private static List<RaycastResult> _results;
 
         public static bool IsOverUI()
         {

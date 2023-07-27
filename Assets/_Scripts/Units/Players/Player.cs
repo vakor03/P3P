@@ -18,24 +18,25 @@ namespace _Scripts.Units.Players
         [SerializeField] private float radiusOffset = 0.5f;
         [SerializeField] private Transform playerVisuals;
 
+        private IAnimation _animation;
+        private DamageReceiver _damageReceiver;
+
 
         private bool _invincible;
+        private JumpRadiusController _jumpRadiusController;
 
 
         private PlayerAttacker _playerAttacker;
         private PlayerMover _playerMover;
-        private DamageReceiver _damageReceiver;
-        private JumpRadiusController _jumpRadiusController;
-        public JumpRadiusController JumpRadiusController => _jumpRadiusController;
 
-            private IUnitHealth _unitHealth;
+        private Transform _transform;
+
+        private IUnitHealth _unitHealth;
+        public IPlayerMover PlayerMover => _playerMover;
+        public JumpRadiusController JumpRadiusController => _jumpRadiusController;
 
         public IUnitHealth UnitHealth => _unitHealth;
         public IAnimation Animation => _animation;
-
-        private IAnimation _animation;
-
-        private Transform _transform;
 
         public float JumpDuration => _playerMover.JumpDuration;
 
@@ -86,13 +87,13 @@ namespace _Scripts.Units.Players
         private readonly float _jumpRadiusModifier;
         private readonly float _radiusOffset;
 
+        private readonly int _stepsCount = 6;
+
         public JumpRadiusController(float jumpRadiusModifier, float radiusOffset)
         {
             _jumpRadiusModifier = jumpRadiusModifier;
             _radiusOffset = radiusOffset;
         }
-
-        private readonly int _stepsCount = 6;
 
         public float JumpRadius { get; private set; }
         public int JumpNumber { get; private set; }
@@ -128,10 +129,5 @@ namespace _Scripts.Units.Players
         float JumpRadius { get; }
         int JumpNumber { get; }
         event Action OnJumpRadiusChanged;
-    }
-
-    public interface IPlayer
-    {
-        IUnitHealth UnitHealth { get; }
     }
 }

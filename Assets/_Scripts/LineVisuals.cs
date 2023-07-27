@@ -11,11 +11,11 @@ namespace _Scripts
     public class LineVisuals : MonoBehaviour
     {
         [SerializeField] [Range(0, 50)] private int segments = 50;
-        [SerializeField] private PlayerMover playerMover;
 
         private IJumpRadiusController _jumpRadiusController;
 
         private LineRenderer _lineRenderer;
+        private IPlayerMover _playerMover;
 
         private void Awake()
         {
@@ -24,13 +24,15 @@ namespace _Scripts
 
         private void Start()
         {
+            _playerMover = Player.Instance.PlayerMover;
             _jumpRadiusController = Player.Instance.JumpRadiusController;
+            
             InitLine();
             RenderLine(_jumpRadiusController.JumpRadius);
 
             _jumpRadiusController.OnJumpRadiusChanged += PlayerOnJumpRadiusChanged;
-            playerMover.OnJumpStarted += PlayerOnJumpStarted;
-            playerMover.OnJumpFinished += PlayerOnJumpFinished;
+            _playerMover.OnJumpStarted += PlayerOnJumpStarted;
+            _playerMover.OnJumpFinished += PlayerOnJumpFinished;
         }
 
         private void PlayerOnJumpFinished()

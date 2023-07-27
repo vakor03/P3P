@@ -1,9 +1,13 @@
-﻿using System.Collections;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using _Scripts.Helpers;
 using _Scripts.Units.Players;
 using MEC;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts.Units.Enemies.RangedEnemyStates
 {
@@ -51,7 +55,7 @@ namespace _Scripts.Units.Enemies.RangedEnemyStates
 
         public void Update(RangedEnemy context)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 

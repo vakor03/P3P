@@ -11,7 +11,7 @@ namespace _Scripts.HealthSystems
         int MaxHealth { get; }
         int CurrentHealth { get; }
         float CurrentHealthNormalized { get; }
-        
+
         event Action<int,int> OnHealthChanged;
         event Action OnDead;
 

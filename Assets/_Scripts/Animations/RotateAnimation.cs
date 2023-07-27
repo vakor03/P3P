@@ -11,11 +11,12 @@ namespace _Scripts.Animations
 {
     public class RotateAnimation : IAnimation
     {
-        private readonly Transform _transform;
         private readonly float _duration;
+        private readonly Transform _transform;
 
         private bool _animationRunning;
         private CoroutineHandle _currentAnimationRoutine;
+
         public RotateAnimation(Transform transform, float duration)
         {
             _transform = transform;

@@ -9,13 +9,6 @@ namespace _Scripts.HealthSystems
 {
     public class UnitHealth : IUnitHealth
     {
-        public int MaxHealth { get; private set; }
-        public int CurrentHealth { get; private set; }
-        public float CurrentHealthNormalized => (float)CurrentHealth / MaxHealth;
-        
-        public event Action<int,int> OnHealthChanged;
-        public event Action OnDead;
-
         public UnitHealth(int maxHealth)
         {
             MaxHealth = maxHealth;
@@ -27,6 +20,13 @@ namespace _Scripts.HealthSystems
             MaxHealth = maxHealth;
             CurrentHealth = currentHealth;
         }
+
+        public int MaxHealth { get; private set; }
+        public int CurrentHealth { get; private set; }
+        public float CurrentHealthNormalized => (float)CurrentHealth / MaxHealth;
+
+        public event Action<int,int> OnHealthChanged;
+        public event Action OnDead;
 
         public void ReceiveDamage(int value)
         {

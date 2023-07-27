@@ -1,12 +1,16 @@
-﻿using System;
+﻿#region
+
+using System;
+
+#endregion
 
 namespace _Scripts.Timers
 {
     public interface ITimer
     {
-        event Action OnTimeElapsed;
         float LoopTime { get; }
         bool IsStarted { get; }
+        event Action OnTimeElapsed;
         void Start();
         void Stop();
     }

@@ -1,6 +1,10 @@
-﻿using _Scripts.Managers;
+﻿#region
+
+using _Scripts.Managers;
 using _Scripts.Timers;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts
 {
@@ -18,14 +22,6 @@ namespace _Scripts
             _timer.OnTimeElapsed += SpawnEnemies;
         }
 
-        private void SpawnEnemies()
-        {
-            for (int i = 0; i < spawnCount; i++)
-            {
-                EnemiesManager.Instance.SpawnEnemy();
-            }
-        }
-
         private void Start()
         {
             if (isActive)
@@ -37,6 +33,14 @@ namespace _Scripts
         private void OnDestroy()
         {
             _timer.Stop();
+        }
+
+        private void SpawnEnemies()
+        {
+            for (int i = 0; i < spawnCount; i++)
+            {
+                EnemiesManager.Instance.SpawnEnemy();
+            }
         }
     }
 }

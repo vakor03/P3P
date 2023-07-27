@@ -1,5 +1,9 @@
-﻿using _Scripts.HealthSystems;
+﻿#region
+
+using _Scripts.HealthSystems;
 using _Scripts.Systems;
+
+#endregion
 
 namespace _Scripts.Units.Enemies
 {

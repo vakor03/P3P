@@ -19,6 +19,14 @@ namespace _Scripts.Timers
             LoopTime = loopTime;
         }
 
+        public void Dispose()
+        {
+            if (IsStarted)
+            {
+                Coroutines.StopRoutineMEC(_timerRoutine);
+            }
+        }
+
         public event Action OnTimeElapsed;
 
 
@@ -53,14 +61,6 @@ namespace _Scripts.Timers
             {
                 yield return Timing.WaitForSeconds(LoopTime);
                 OnTimeElapsed?.Invoke();
-            }
-        }
-
-        public void Dispose()
-        {
-            if (IsStarted)
-            {
-                Coroutines.StopRoutineMEC(_timerRoutine);
             }
         }
     }

@@ -12,7 +12,7 @@ namespace _Scripts.Units.Players
 
         [SerializeField] private SphereCollider attackCollider;
         [SerializeField] private LayerMask enemiesLayerMask;
-        
+
         private readonly Collider[] _colliderBuffer = new Collider[COLLIDER_BUFFER_COUNT];
 
         public void PerformAttack()

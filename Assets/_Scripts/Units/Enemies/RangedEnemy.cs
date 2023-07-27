@@ -1,15 +1,18 @@
-﻿using _Scripts.HealthSystems;
+﻿#region
+
+using _Scripts.HealthSystems;
 using _Scripts.Units.Enemies.RangedEnemyStates;
 using _Scripts.Units.Players;
 using UnityEngine;
+
+#endregion
 
 namespace _Scripts.Units.Enemies
 {
     public class RangedEnemy : EnemyBase
     {
-        public IUnitHealth UnitHealth { get; private set; }
-
         private IRangedEnemyState _currentState;
+        public IUnitHealth UnitHealth { get; private set; }
         public float DistanceToPlayer => Vector3.Distance(transform.position, Player.Instance.transform.position);
         public Transform Transform => transform;
 
@@ -17,6 +20,19 @@ namespace _Scripts.Units.Enemies
         {
             UnitHealth = new UnitHealth(Stats.health);
             SetDefaultState();
+        }
+
+        private void Update()
+        {
+            _currentState.Update(this);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.TryGetComponent(out IPlayer player))
+            {
+                player.UnitHealth.ReceiveDamage(Stats.damage);
+            }
         }
 
         public void SwitchState(IRangedEnemyState newState)
@@ -33,19 +49,6 @@ namespace _Scripts.Units.Enemies
         private void SetDefaultState()
         {
             SwitchState(new MovingTowardsState());
-        }
-
-        private void Update()
-        {
-            _currentState.Update(this);
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.TryGetComponent(out IPlayer player))
-            {
-                player.UnitHealth.ReceiveDamage(Stats.damage);
-            }
         }
     }
 }

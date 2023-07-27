@@ -1,9 +1,18 @@
-﻿using UnityEngine;
+﻿#region
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using MEC;
+using UnityEngine;
 using UnityEngine.Assertions;
+using Object = UnityEngine.Object;
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
 #endif
+
+#endregion
 
 // /////////////////////////////////////////////////////////////////////////////////////////
 //                              More Effective Coroutines
@@ -63,7 +72,7 @@ namespace MEC
         /// <summary>
         /// The time in seconds that the current segment has been running.
         /// </summary>
-        [System.NonSerialized]
+        [NonSerialized]
         public float localTime;
         /// <summary>
         /// The time in seconds that the current segment has been running.
@@ -72,7 +81,7 @@ namespace MEC
         /// <summary>
         /// The amount of time in fractional seconds that elapsed between this frame and the last frame.
         /// </summary>
-        [System.NonSerialized]
+        [NonSerialized]
         public float deltaTime;
         /// <summary>
         /// The amount of time in fractional seconds that elapsed between this frame and the last frame.
@@ -81,11 +90,11 @@ namespace MEC
         /// <summary>
         /// Used for advanced coroutine control.
         /// </summary>
-        public static System.Func<IEnumerator<float>, CoroutineHandle, IEnumerator<float>> ReplacementFunction;
+        public static Func<IEnumerator<float>, CoroutineHandle, IEnumerator<float>> ReplacementFunction;
         /// <summary>
         /// This event fires just before each segment is run.
         /// </summary>
-        public static event System.Action OnPreExecute;
+        public static event Action OnPreExecute;
         /// <summary>
         /// You can use "yield return Timing.WaitForOneFrame;" inside a coroutine function to go to the next frame. 
         /// </summary>
@@ -93,7 +102,7 @@ namespace MEC
         /// <summary>
         /// The main thread that (almost) everything in unity runs in.
         /// </summary>
-        public static System.Threading.Thread MainThread { get; private set; }
+        public static Thread MainThread { get; private set; }
         /// <summary>
         /// The handle of the current coroutine that is running.
         /// </summary>
@@ -201,7 +210,7 @@ namespace MEC
         void OnEnable()
         {
             if (MainThread == null)
-                MainThread = System.Threading.Thread.CurrentThread;
+                MainThread = Thread.CurrentThread;
 
             InitializeInstanceID();
         }
@@ -224,7 +233,7 @@ namespace MEC
                     if (_instanceID == 0x10)
                     {
                         GameObject.Destroy(gameObject);
-                        throw new System.OverflowException("You are only allowed 15 different contexts for MEC to run inside at one time.");
+                        throw new OverflowException("You are only allowed 15 different contexts for MEC to run inside at one time.");
                     }
 
                     if (ActiveInstances[_instanceID] == null)
@@ -281,7 +290,7 @@ namespace MEC
                                 Profiler.EndSample();
                         }
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
                         Debug.LogException(ex);
 
@@ -332,7 +341,7 @@ namespace MEC
                                 Profiler.EndSample();
                         }
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
                         Debug.LogException(ex);
 
@@ -405,7 +414,7 @@ namespace MEC
                                 Profiler.EndSample();
                         }
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
                         Debug.LogException(ex);
 
@@ -465,7 +474,7 @@ namespace MEC
                                 Profiler.EndSample();
                         }
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
                         Debug.LogException(ex);
 
@@ -2082,7 +2091,7 @@ namespace MEC
         /// <param name="delay">The number of seconds to wait before calling the action.</param>
         /// <param name="action">The action to call.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallDelayed(float delay, System.Action action)
+        public static CoroutineHandle CallDelayed(float delay, Action action)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._DelayedCall(delay, action, null));
         }
@@ -2093,7 +2102,7 @@ namespace MEC
         /// <param name="delay">The number of seconds to wait before calling the action.</param>
         /// <param name="action">The action to call.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallDelayedOnInstance(float delay, System.Action action)
+        public CoroutineHandle CallDelayedOnInstance(float delay, Action action)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_DelayedCall(delay, action, null));
         }
@@ -2105,7 +2114,7 @@ namespace MEC
         /// <param name="action">The action to call.</param>
         /// <param name="cancelWith">A GameObject that will be checked to make sure it hasn't been destroyed before calling the action.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallDelayed(float delay, System.Action action, GameObject cancelWith)
+        public static CoroutineHandle CallDelayed(float delay, Action action, GameObject cancelWith)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._DelayedCall(delay, action, cancelWith));
         }
@@ -2117,7 +2126,7 @@ namespace MEC
         /// <param name="action">The action to call.</param>
         /// <param name="cancelWith">A GameObject that will be checked to make sure it hasn't been destroyed before calling the action.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallDelayedOnInstance(float delay, System.Action action, GameObject cancelWith)
+        public CoroutineHandle CallDelayedOnInstance(float delay, Action action, GameObject cancelWith)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_DelayedCall(delay, action, cancelWith));
         }
@@ -2129,7 +2138,7 @@ namespace MEC
         /// <param name="action">The action to call.</param>
         /// <param name="segment">The timing segment that the call should be made in.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallDelayed(float delay, Segment segment, System.Action action)
+        public static CoroutineHandle CallDelayed(float delay, Segment segment, Action action)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._DelayedCall(delay, action, null), segment);
         }
@@ -2141,7 +2150,7 @@ namespace MEC
         /// <param name="action">The action to call.</param>
         /// <param name="segment">The timing segment that the call should be made in.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallDelayedOnInstance(float delay, Segment segment, System.Action action)
+        public CoroutineHandle CallDelayedOnInstance(float delay, Segment segment, Action action)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_DelayedCall(delay, action, null), segment);
         }
@@ -2155,7 +2164,7 @@ namespace MEC
         /// before calling the action.</param>
         /// <param name="segment">The timing segment that the call should be made in.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallDelayed(float delay, Segment segment, System.Action action, GameObject gameObject)
+        public static CoroutineHandle CallDelayed(float delay, Segment segment, Action action, GameObject gameObject)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._DelayedCall(delay, action, gameObject), segment);
         }
@@ -2169,12 +2178,12 @@ namespace MEC
         /// before calling the action.</param>
         /// <param name="segment">The timing segment that the call should be made in.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallDelayedOnInstance(float delay, Segment segment, System.Action action, GameObject gameObject)
+        public CoroutineHandle CallDelayedOnInstance(float delay, Segment segment, Action action, GameObject gameObject)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_DelayedCall(delay, action, gameObject), segment);
         }
 
-        private IEnumerator<float> _DelayedCall(float delay, System.Action action, GameObject cancelWith)
+        private IEnumerator<float> _DelayedCall(float delay, Action action, GameObject cancelWith)
         {
             yield return WaitForSecondsOnInstance(delay);
 
@@ -2190,7 +2199,7 @@ namespace MEC
         /// <param name="action">The action to call every frame.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallPeriodically(float timeframe, float period, System.Action action, System.Action onDone = null)
+        public static CoroutineHandle CallPeriodically(float timeframe, float period, Action action, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._CallContinuously(timeframe, period, action, onDone), Segment.Update);
         }
@@ -2203,7 +2212,7 @@ namespace MEC
         /// <param name="action">The action to call every frame.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallPeriodicallyOnInstance(float timeframe, float period, System.Action action, System.Action onDone = null)
+        public CoroutineHandle CallPeriodicallyOnInstance(float timeframe, float period, Action action, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_CallContinuously(timeframe, period, action, onDone), Segment.Update);
         }
@@ -2217,7 +2226,7 @@ namespace MEC
         /// <param name="segment">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallPeriodically(float timeframe, float period, System.Action action, Segment segment, System.Action onDone = null)
+        public static CoroutineHandle CallPeriodically(float timeframe, float period, Action action, Segment segment, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._CallContinuously(timeframe, period, action, onDone), segment);
         }
@@ -2231,7 +2240,7 @@ namespace MEC
         /// <param name="segment">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallPeriodicallyOnInstance(float timeframe, float period, System.Action action, Segment segment, System.Action onDone = null)
+        public CoroutineHandle CallPeriodicallyOnInstance(float timeframe, float period, Action action, Segment segment, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_CallContinuously(timeframe, period, action, onDone), segment);
         }
@@ -2243,7 +2252,7 @@ namespace MEC
         /// <param name="action">The action to call every frame.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallContinuously(float timeframe, System.Action action, System.Action onDone = null)
+        public static CoroutineHandle CallContinuously(float timeframe, Action action, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._CallContinuously(timeframe, 0f, action, onDone), Segment.Update);
         }
@@ -2255,7 +2264,7 @@ namespace MEC
         /// <param name="action">The action to call every frame.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallContinuouslyOnInstance(float timeframe, System.Action action, System.Action onDone = null)
+        public CoroutineHandle CallContinuouslyOnInstance(float timeframe, Action action, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_CallContinuously(timeframe, 0f, action, onDone), Segment.Update);
         }
@@ -2268,7 +2277,7 @@ namespace MEC
         /// <param name="timing">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallContinuously(float timeframe, System.Action action, Segment timing, System.Action onDone = null)
+        public static CoroutineHandle CallContinuously(float timeframe, Action action, Segment timing, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutine(Instance._CallContinuously(timeframe, 0f, action, onDone), timing);
         }
@@ -2281,12 +2290,12 @@ namespace MEC
         /// <param name="timing">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallContinuouslyOnInstance(float timeframe, System.Action action, Segment timing, System.Action onDone = null)
+        public CoroutineHandle CallContinuouslyOnInstance(float timeframe, Action action, Segment timing, Action onDone = null)
         {
             return action == null ? new CoroutineHandle() : RunCoroutineOnInstance(_CallContinuously(timeframe, 0f, action, onDone), timing);
         }
 
-        private IEnumerator<float> _CallContinuously(float timeframe, float period, System.Action action, System.Action onDone)
+        private IEnumerator<float> _CallContinuously(float timeframe, float period, Action action, Action onDone)
         {
             double startTime = localTime;
             while (localTime <= startTime + timeframe)
@@ -2310,7 +2319,7 @@ namespace MEC
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
         public static CoroutineHandle CallPeriodically<T>
-            (T reference, float timeframe, float period, System.Action<T> action, System.Action<T> onDone = null)
+            (T reference, float timeframe, float period, Action<T> action, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutine(Instance._CallContinuously(reference, timeframe, period, action, onDone), Segment.Update);
@@ -2326,7 +2335,7 @@ namespace MEC
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
         public CoroutineHandle CallPeriodicallyOnInstance<T>
-            (T reference, float timeframe, float period, System.Action<T> action, System.Action<T> onDone = null)
+            (T reference, float timeframe, float period, Action<T> action, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutineOnInstance(_CallContinuously(reference, timeframe, period, action, onDone), Segment.Update);
@@ -2342,8 +2351,8 @@ namespace MEC
         /// <param name="timing">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallPeriodically<T>(T reference, float timeframe, float period, System.Action<T> action, 
-            Segment timing, System.Action<T> onDone = null)
+        public static CoroutineHandle CallPeriodically<T>(T reference, float timeframe, float period, Action<T> action, 
+            Segment timing, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutine(Instance._CallContinuously(reference, timeframe, period, action, onDone), timing);
@@ -2359,8 +2368,8 @@ namespace MEC
         /// <param name="timing">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallPeriodicallyOnInstance<T>(T reference, float timeframe, float period, System.Action<T> action,
-            Segment timing, System.Action<T> onDone = null)
+        public CoroutineHandle CallPeriodicallyOnInstance<T>(T reference, float timeframe, float period, Action<T> action,
+            Segment timing, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutineOnInstance(_CallContinuously(reference, timeframe, period, action, onDone), timing);
@@ -2374,7 +2383,7 @@ namespace MEC
         /// <param name="action">The action to call every frame.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallContinuously<T>(T reference, float timeframe, System.Action<T> action, System.Action<T> onDone = null)
+        public static CoroutineHandle CallContinuously<T>(T reference, float timeframe, Action<T> action, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutine(Instance._CallContinuously(reference, timeframe, 0f, action, onDone), Segment.Update);
@@ -2388,7 +2397,7 @@ namespace MEC
         /// <param name="action">The action to call every frame.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallContinuouslyOnInstance<T>(T reference, float timeframe, System.Action<T> action, System.Action<T> onDone = null)
+        public CoroutineHandle CallContinuouslyOnInstance<T>(T reference, float timeframe, Action<T> action, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutineOnInstance(_CallContinuously(reference, timeframe, 0f, action, onDone), Segment.Update);
@@ -2403,8 +2412,8 @@ namespace MEC
         /// <param name="timing">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public static CoroutineHandle CallContinuously<T>(T reference, float timeframe, System.Action<T> action, 
-            Segment timing, System.Action<T> onDone = null)
+        public static CoroutineHandle CallContinuously<T>(T reference, float timeframe, Action<T> action, 
+            Segment timing, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutine(Instance._CallContinuously(reference, timeframe, 0f, action, onDone), timing);
@@ -2419,15 +2428,15 @@ namespace MEC
         /// <param name="timing">The timing segment to run in.</param>
         /// <param name="onDone">An optional action to call when this function finishes.</param>
         /// <returns>The handle to the coroutine that is started by this function.</returns>
-        public CoroutineHandle CallContinuouslyOnInstance<T>(T reference, float timeframe, System.Action<T> action,
-            Segment timing, System.Action<T> onDone = null)
+        public CoroutineHandle CallContinuouslyOnInstance<T>(T reference, float timeframe, Action<T> action,
+            Segment timing, Action<T> onDone = null)
         {
             return action == null ? new CoroutineHandle() : 
                 RunCoroutineOnInstance(_CallContinuously(reference, timeframe, 0f, action, onDone), timing);
         }
 
         private IEnumerator<float> _CallContinuously<T>(T reference, float timeframe, float period,
-            System.Action<T> action, System.Action<T> onDone = null)
+            Action<T> action, Action<T> onDone = null)
         {
             double startTime = localTime;
             while (localTime <= startTime + timeframe)
@@ -2441,7 +2450,7 @@ namespace MEC
                 onDone(reference);
         }
 
-        private struct ProcessIndex : System.IEquatable<ProcessIndex>
+        private struct ProcessIndex : IEquatable<ProcessIndex>
         {
             public Segment seg;
             public int i;
@@ -2474,70 +2483,70 @@ namespace MEC
             }
         }
 
-        [System.Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
-        public new Coroutine StartCoroutine(System.Collections.IEnumerator routine) { return null; }
+        [Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
+        public new Coroutine StartCoroutine(IEnumerator routine) { return null; }
 
-        [System.Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
+        [Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
         public new Coroutine StartCoroutine(string methodName, object value) { return null; }
 
-        [System.Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
+        [Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
         public new Coroutine StartCoroutine(string methodName) { return null; }
 
-        [System.Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
-        public new Coroutine StartCoroutine_Auto(System.Collections.IEnumerator routine) { return null; }
+        [Obsolete("Unity coroutine function, use RunCoroutine instead.", true)]
+        public new Coroutine StartCoroutine_Auto(IEnumerator routine) { return null; }
 
-        [System.Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
+        [Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
         public new void StopCoroutine(string methodName) { }
 
-        [System.Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
-        public new void StopCoroutine(System.Collections.IEnumerator routine) { }
+        [Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
+        public new void StopCoroutine(IEnumerator routine) { }
 
-        [System.Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
+        [Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
         public new void StopCoroutine(Coroutine routine) { }
 
-        [System.Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
+        [Obsolete("Unity coroutine function, use KillCoroutines instead.", true)]
         public new void StopAllCoroutines() { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void Destroy(Object obj) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void Destroy(Object obj, float f) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void DestroyObject(Object obj) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void DestroyObject(Object obj, float f) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void DestroyImmediate(Object obj) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void DestroyImmediate(Object obj, bool b) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void Instantiate(Object obj) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void Instantiate(Object original, Vector3 position, Quaternion rotation) { }
 
-        [System.Obsolete("Use your own GameObject for this.", true)]
+        [Obsolete("Use your own GameObject for this.", true)]
         public new static void Instantiate<T>(T original) where T : Object { }
 
-        [System.Obsolete("Just.. no.", true)]
+        [Obsolete("Just.. no.", true)]
         public new static T FindObjectOfType<T>() where T : Object { return null; }
 
-        [System.Obsolete("Just.. no.", true)]
-        public new static Object FindObjectOfType(System.Type t) { return null; }
+        [Obsolete("Just.. no.", true)]
+        public new static Object FindObjectOfType(Type t) { return null; }
 
-        [System.Obsolete("Just.. no.", true)]
+        [Obsolete("Just.. no.", true)]
         public new static T[] FindObjectsOfType<T>() where T : Object { return null; }
 
-        [System.Obsolete("Just.. no.", true)]
-        public new static Object[] FindObjectsOfType(System.Type t) { return null; }
+        [Obsolete("Just.. no.", true)]
+        public new static Object[] FindObjectsOfType(Type t) { return null; }
 
-        [System.Obsolete("Just.. no.", true)]
+        [Obsolete("Just.. no.", true)]
         public new static void print(object message) { }
     }
 
@@ -2591,7 +2600,7 @@ namespace MEC
     /// <summary>
     /// A handle for a MEC coroutine.
     /// </summary>
-    public struct CoroutineHandle : System.IEquatable<CoroutineHandle>
+    public struct CoroutineHandle : IEquatable<CoroutineHandle>
     {
         private const byte ReservedSpace = 0x0F;
         private readonly static int[] NextIndex = { ReservedSpace + 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -2702,7 +2711,7 @@ public static class MECExtensionMethods2
     /// <returns>The modified coroutine handle.</returns>
     public static IEnumerator<float> CancelWith(this IEnumerator<float> coroutine, GameObject gameObject)
     {
-        while (MEC.Timing.MainThread != System.Threading.Thread.CurrentThread || (gameObject && gameObject.activeInHierarchy && coroutine.MoveNext()))
+        while (Timing.MainThread != Thread.CurrentThread || (gameObject && gameObject.activeInHierarchy && coroutine.MoveNext()))
             yield return coroutine.Current;
     }
 
@@ -2715,8 +2724,8 @@ public static class MECExtensionMethods2
     /// <returns>The modified coroutine handle.</returns>
     public static IEnumerator<float> CancelWith(this IEnumerator<float> coroutine, GameObject gameObject1, GameObject gameObject2)
     {
-        while (MEC.Timing.MainThread != System.Threading.Thread.CurrentThread || (gameObject1 && gameObject1.activeInHierarchy && 
-                gameObject2 && gameObject2.activeInHierarchy && coroutine.MoveNext()))
+        while (Timing.MainThread != Thread.CurrentThread || (gameObject1 && gameObject1.activeInHierarchy && 
+                                                             gameObject2 && gameObject2.activeInHierarchy && coroutine.MoveNext()))
             yield return coroutine.Current;
     }
 
@@ -2731,8 +2740,8 @@ public static class MECExtensionMethods2
     public static IEnumerator<float> CancelWith(this IEnumerator<float> coroutine,
         GameObject gameObject1, GameObject gameObject2, GameObject gameObject3)
     {
-        while (MEC.Timing.MainThread != System.Threading.Thread.CurrentThread || (gameObject1 && gameObject1.activeInHierarchy && 
-                gameObject2 && gameObject2.activeInHierarchy && gameObject3 && gameObject3.activeInHierarchy && coroutine.MoveNext()))
+        while (Timing.MainThread != Thread.CurrentThread || (gameObject1 && gameObject1.activeInHierarchy && 
+                                                             gameObject2 && gameObject2.activeInHierarchy && gameObject3 && gameObject3.activeInHierarchy && coroutine.MoveNext()))
             yield return coroutine.Current;
     }
 }
