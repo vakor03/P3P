@@ -47,10 +47,12 @@ namespace _Scripts.Units.Enemies.RangedEnemyStates
 
         public void Update(RangedEnemy context, float deltaTime)
         {
+            var movementDirection = CalculateMovementDirectionNormalized(context);
             context.Transform.position +=
-                CalculateMovementDirectionNormalized(context) * (context.Stats.speed * deltaTime);
+                movementDirection * (context.Stats.speed * deltaTime);
 
-            if (context.EnemyAttacker.CanAttack())
+            if (movementDirection == Vector3.zero 
+                && context.EnemyAttacker.CanAttack())
             {
                 context.SwitchState(new AttackingState());
             }
@@ -59,19 +61,27 @@ namespace _Scripts.Units.Enemies.RangedEnemyStates
 
     public class AttackingState : IRangedEnemyState
     {
+        private RangedEnemy _context;
+
         public void Enter(RangedEnemy context)
         {
             Debug.Log("Enter AttackingState");
+            _context = context;
 
-            if (context.EnemyAttacker.CanAttack())
-            {
-                context.EnemyAttacker.PerformAttack();
-            }
+
+            context.EnemyAttacker.PerformAttack();
+            context.EnemyAttacker.OnAttackFinished += EnemyAttackerOnAttackFinished;
+        }
+
+        private void EnemyAttackerOnAttackFinished()
+        {
+            _context.SwitchState(new MovingState());
         }
 
         public void Exit(RangedEnemy context)
         {
             Debug.Log("Exit AttackingState");
+            context.EnemyAttacker.OnAttackFinished -= EnemyAttackerOnAttackFinished;
         }
     }
 }

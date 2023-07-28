@@ -12,10 +12,18 @@ namespace _Scripts.Units.Enemies
     public class RangedEnemy : EnemyBase
     {
         private IRangedEnemyState _currentState;
-        public float DistanceToPlayer => Vector3.Distance(transform.position, Player.Instance.transform.position);
+        public float DistanceToPlayer => CalculateDistanceToPlayer();
         public Transform Transform => transform;
 
         public EnemyAttacker EnemyAttacker { get; private set; }
+
+        private float CalculateDistanceToPlayer()
+        {
+            var playerPosition = Player.Instance.transform.position;
+            return Vector3.Distance(
+                new Vector3(playerPosition.x, 0, playerPosition.z),
+                new Vector3(Transform.position.x, 0, Transform.position.z));
+        }
 
         private void Awake()
         {
@@ -36,7 +44,7 @@ namespace _Scripts.Units.Enemies
                 player.UnitHealth.ReceiveDamage(Stats.damage);
             }
         }
-        
+
         public void SwitchState(IRangedEnemyState newState)
         {
             if (_currentState != null)

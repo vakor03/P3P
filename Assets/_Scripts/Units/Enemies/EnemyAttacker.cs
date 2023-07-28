@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _Scripts.Helpers;
 using MEC;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace _Scripts.Units.Enemies
         [SerializeField] private float rechargeTime;
         [SerializeField] private int projectilesCount;
 
+        public event Action OnAttackFinished;
         public void Update()
         {
             if (Input.GetKeyDown(KeyCode.G))
@@ -51,6 +53,7 @@ namespace _Scripts.Units.Enemies
             }
 
             _isAttacking = false;
+            OnAttackFinished?.Invoke();
 
             Coroutines.StartRoutineMEC(RechargingRoutineMEC());
         }
