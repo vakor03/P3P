@@ -39,7 +39,7 @@ namespace _Scripts
         {
             for (int i = 0; i < spawnCount; i++)
             {
-                EnemiesManager.Instance.SpawnEnemy();
+                EnemiesManager.Instance.SpawnRandomEnemy();
             }
         }
     }

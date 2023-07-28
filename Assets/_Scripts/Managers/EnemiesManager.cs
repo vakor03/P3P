@@ -16,15 +16,27 @@ namespace _Scripts.Managers
         private void Update()
         {
 #if DEBUG
-            if (Input.GetKeyDown(KeyCode.T))
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                SpawnEnemy();
+                SpawnEnemy(EnemyType.MeleeEnemy);
+            }
+            
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                SpawnEnemy(EnemyType.RangedEnemy);
             }
 #endif
         }
 
-        public void SpawnEnemy()
+        public void SpawnEnemy(EnemyType enemyType)
         {
+            var spawnPoint = GetPointInRadius(Player.Instance.transform.position, 7f, 12f);
+            SpawnUnit(enemyType, spawnPoint);
+        }
+
+        public void SpawnRandomEnemy()
+        {
+            //TODO : SpawnRandomEnemy
             var spawnPoint = GetPointInRadius(Player.Instance.transform.position, 7f, 12f);
             SpawnUnit(EnemyType.MeleeEnemy, spawnPoint);
         }

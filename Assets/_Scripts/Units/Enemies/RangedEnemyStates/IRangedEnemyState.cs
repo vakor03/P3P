@@ -12,7 +12,7 @@
             return;
         }
 
-        void Update(RangedEnemy context)
+        void Update(RangedEnemy context, float deltaTime)
         {
             return;
         }

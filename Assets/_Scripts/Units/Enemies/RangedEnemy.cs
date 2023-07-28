@@ -15,15 +15,18 @@ namespace _Scripts.Units.Enemies
         public float DistanceToPlayer => Vector3.Distance(transform.position, Player.Instance.transform.position);
         public Transform Transform => transform;
 
+        public EnemyAttacker EnemyAttacker { get; private set; }
+
         private void Awake()
         {
             UnitHealth = new UnitHealth(Stats.health);
             SetDefaultState();
+            EnemyAttacker = GetComponent<EnemyAttacker>();
         }
 
         private void Update()
         {
-            _currentState.Update(this);
+            _currentState.Update(this, Time.deltaTime);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -33,7 +36,7 @@ namespace _Scripts.Units.Enemies
                 player.UnitHealth.ReceiveDamage(Stats.damage);
             }
         }
-
+        
         public void SwitchState(IRangedEnemyState newState)
         {
             if (_currentState != null)
@@ -47,7 +50,7 @@ namespace _Scripts.Units.Enemies
 
         private void SetDefaultState()
         {
-            SwitchState(new MovingTowardsState());
+            SwitchState(new MovingState());
         }
     }
 }

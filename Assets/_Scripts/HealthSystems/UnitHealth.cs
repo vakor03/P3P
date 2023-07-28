@@ -31,7 +31,6 @@ namespace _Scripts.HealthSystems
         public void ReceiveDamage(int value)
         {
             int oldValue = CurrentHealth;
-            Debug.Log(CurrentHealth);
             CurrentHealth = Mathf.Max(0, CurrentHealth - value);
             OnHealthChanged?.Invoke(oldValue, CurrentHealth);
 
