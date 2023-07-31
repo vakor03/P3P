@@ -9,6 +9,6 @@ namespace _Scripts
     public interface IDamageable
     {
         event Action OnDamageTaken;
-        void TakeDamage();
+        void ReceiveDamage();
     }
 }

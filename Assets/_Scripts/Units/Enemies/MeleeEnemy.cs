@@ -30,7 +30,7 @@ namespace _Scripts.Units.Enemies
             if (other.TryGetComponent(out DamageReceiver damageReceiver) && damageReceiver.IsPlayer)
             {
                 damageReceiver.ReceiveDamage(1);
-                TakeDamage();
+                ReceiveDamage();
             }
         }
         
@@ -44,7 +44,7 @@ namespace _Scripts.Units.Enemies
 
         public event Action OnDamageTaken;
 
-        public void TakeDamage()
+        public void ReceiveDamage()
         {
             OnDamageTaken?.Invoke();
             HandleDeath(_transform.position);

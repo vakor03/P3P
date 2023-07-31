@@ -195,9 +195,10 @@ MonoBehaviour:
   projectilePrefab: {fileID: 5748107233773138411, guid: 48f0c80ccdb986d41a8ab701d30da0bf,
     type: 3}
   projectileSpeed: 2
-  delayBetweenAttacks: 0.05
-  rechargeTime: 1
-  projectilesCount: 100
+  delayBetweenAttacks: 0.2
+  rechargeTime: 5
+  projectilesCount: 20
+  preAttackDelay: 2
 --- !u!1 &5471683910158016082
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using System;
+using _Scripts.Units.Players;
 using UnityEngine;
 
 namespace _Scripts.Units.Enemies
@@ -16,6 +17,20 @@ namespace _Scripts.Units.Enemies
         private void Update()
         {
             transform.position += _speed * Time.deltaTime * _direction;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out IPlayer player))
+            {
+                player.UnitHealth.ReceiveDamage(1);
+                DestroySelf();
+            }
+        }
+
+        public void DestroySelf()
+        {
+            Destroy(gameObject);
         }
     }
 }

@@ -710,24 +710,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f095068b9e9de3458ad03732b4dd25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &647767702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 647767694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd990c59921d422d8565deae4ccb24ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 5748107233773138411, guid: 48f0c80ccdb986d41a8ab701d30da0bf,
-    type: 3}
-  projectileSpeed: 2
-  delayBetweenAttacks: 0.05
-  rechargeTime: 1
-  projectilesCount: 100
 --- !u!1 &671061450
 GameObject:
   m_ObjectHideFlags: 0
@@ -2418,7 +2400,7 @@ PrefabInstance:
     - target: {fileID: 5754263192210206618, guid: f095cd7f83cdd0f42ba5a4c9955cb8da,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -100
+      value: -96
       objectReference: {fileID: 0}
     - target: {fileID: 5754263192210206618, guid: f095cd7f83cdd0f42ba5a4c9955cb8da,
         type: 3}
@@ -2511,9 +2493,5 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6877430983529199621, guid: 78c36b5cd9e741a4f9783518e11d077a,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 647767702}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78c36b5cd9e741a4f9783518e11d077a, type: 3}

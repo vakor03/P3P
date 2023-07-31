@@ -1,6 +1,6 @@
 ﻿#region
 
-using _Scripts.HealthSystems;
+using System;
 using _Scripts.Units.Enemies.RangedEnemyStates;
 using _Scripts.Units.Players;
 using UnityEngine;
@@ -9,12 +9,11 @@ using UnityEngine;
 
 namespace _Scripts.Units.Enemies
 {
-    public class RangedEnemy : EnemyBase
+    public class RangedEnemy : EnemyBase, IDamageable
     {
         private IRangedEnemyState _currentState;
         public float DistanceToPlayer => CalculateDistanceToPlayer();
         public Transform Transform => transform;
-
         public EnemyAttacker EnemyAttacker { get; private set; }
 
         private float CalculateDistanceToPlayer()
@@ -27,22 +26,24 @@ namespace _Scripts.Units.Enemies
 
         private void Awake()
         {
-            UnitHealth = new UnitHealth(Stats.health);
-            SetDefaultState();
+            UnitHealth = new SingleHpUnitHealth();
+            
             EnemyAttacker = GetComponent<EnemyAttacker>();
+        }
+
+        private void Start()
+        {
+            UnitHealth.OnDead += () =>
+            {
+                HandleDeath(transform.position);
+                Destroy(gameObject);
+            };
+            SetDefaultState();
         }
 
         private void Update()
         {
             _currentState.Update(this, Time.deltaTime);
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.TryGetComponent(out IPlayer player))
-            {
-                player.UnitHealth.ReceiveDamage(Stats.damage);
-            }
         }
 
         public void SwitchState(IRangedEnemyState newState)
@@ -60,5 +61,16 @@ namespace _Scripts.Units.Enemies
         {
             SwitchState(new MovingState());
         }
+
+        public event Action OnDamageTaken;
+        public void ReceiveDamage()
+        {
+            UnitHealth.ReceiveDamage(1);
+        }
+
+        // public void TakeDamage()
+        // {
+        //     throw new NotImplementedException();
+        // }
     }
 }

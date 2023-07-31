@@ -3,6 +3,7 @@
 using System;
 using _Scripts.HealthSystems;
 using _Scripts.Systems;
+using _Scripts.Units.Players;
 using UnityEngine;
 
 #endregion
@@ -21,6 +22,14 @@ namespace _Scripts.Units.Enemies
         protected virtual void HandleDeath(Vector3 deathPosition)
         {
             OnAnyEnemyDead?.Invoke(deathPosition);
+        }
+        
+        protected void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.TryGetComponent(out IPlayer player))
+            {
+                UnitHealth.ReceiveDamage(1);
+            }
         }
     }
 

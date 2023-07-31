@@ -24,7 +24,7 @@ namespace _Scripts.Units.Players
             {
                 if (_colliderBuffer[i].TryGetComponent(out IDamageable damageable))
                 {
-                    damageable.TakeDamage();
+                    damageable.ReceiveDamage();
                 }
             }
         }

@@ -11,7 +11,8 @@ namespace _Scripts.Units.Enemies
 
         private void Start()
         {
-            Coroutines.StartRoutineMEC(DestroyRoutineMEC());
+            var destroyRoutine = DestroyRoutineMEC().CancelWith(gameObject);
+            Coroutines.StartRoutineMEC(destroyRoutine);
         }
 
         private IEnumerator<float> DestroyRoutineMEC()
