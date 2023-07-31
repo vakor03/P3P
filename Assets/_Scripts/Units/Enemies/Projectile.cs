@@ -23,7 +23,7 @@ namespace _Scripts.Units.Enemies
         {
             if (other.TryGetComponent(out IPlayer player))
             {
-                player.UnitHealth.ReceiveDamage(1);
+                player.DamageReceiver.ReceiveDamage(1);
                 DestroySelf();
             }
         }

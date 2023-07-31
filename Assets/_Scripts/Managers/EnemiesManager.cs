@@ -1,9 +1,11 @@
-#region
+﻿#region
 
+using System;
 using _Scripts.Helpers;
 using _Scripts.Systems;
 using _Scripts.Units.Players;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 #endregion
 
@@ -21,9 +23,9 @@ namespace _Scripts.Managers
 
         public void SpawnRandomEnemy()
         {
-            //TODO : SpawnRandomEnemy
-            var spawnPoint = GetPointInRadius(Player.Instance.transform.position, 7f, 12f);
-            SpawnUnit(EnemyType.MeleeEnemy, spawnPoint);
+            EnemyType enemyType = ResourceSystem.Instance.GetRandomEnemy().enemyType;
+            
+            SpawnEnemy(enemyType);
         }
 
         private Vector3 GetPointInRadius(Vector3 point, float minRadius, float maxRadius)

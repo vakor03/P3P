@@ -38,6 +38,8 @@ namespace _Scripts.Units.Players
 
         public float JumpDuration => _playerMover.JumpDuration;
 
+        public DamageReceiver DamageReceiver => _damageReceiver;
+
         protected override void Awake()
         {
             base.Awake();

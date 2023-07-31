@@ -28,6 +28,7 @@ namespace _Scripts.Units.Enemies
         {
             if (other.gameObject.TryGetComponent(out IPlayer player))
             {
+                player.DamageReceiver.ReceiveDamage(1);
                 UnitHealth.ReceiveDamage(1);
             }
         }

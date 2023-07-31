@@ -32,5 +32,10 @@ namespace _Scripts.Systems
         {
             return _enemiesDictionary[enemyType];
         }
+
+        public EnemySO GetRandomEnemy()
+        {
+            return EnemiesSO[Random.Range(0, EnemiesSO.Count)];
+        }
     }
 }

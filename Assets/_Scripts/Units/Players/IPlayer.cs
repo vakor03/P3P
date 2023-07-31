@@ -8,6 +8,6 @@ namespace _Scripts.Units.Players
 {
     public interface IPlayer
     {
-        IUnitHealth UnitHealth { get; }
+        DamageReceiver DamageReceiver { get; }
     }
 }
