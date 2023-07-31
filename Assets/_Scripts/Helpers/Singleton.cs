@@ -30,7 +30,9 @@ namespace _Scripts.Helpers
             {
                 Destroy(gameObject);
             }
+            
             base.Awake();
+            // TODO: Add dont destroy on load
         }
     }
 }

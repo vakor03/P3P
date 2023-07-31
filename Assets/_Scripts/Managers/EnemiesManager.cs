@@ -1,4 +1,4 @@
-﻿#region
+#region
 
 using _Scripts.Helpers;
 using _Scripts.Systems;
@@ -12,21 +12,6 @@ namespace _Scripts.Managers
     public class EnemiesManager : Singleton<EnemiesManager>
     {
         private const float ENEMIES_DEFAULT_Y = 0.6f;
-
-        private void Update()
-        {
-#if DEBUG
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                SpawnEnemy(EnemyType.MeleeEnemy);
-            }
-            
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                SpawnEnemy(EnemyType.RangedEnemy);
-            }
-#endif
-        }
 
         public void SpawnEnemy(EnemyType enemyType)
         {
